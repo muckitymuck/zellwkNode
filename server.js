@@ -5,7 +5,7 @@ const express = require('express');
 const app = express();
 
 const MongoClient = require('mongodb').MongoClient
-
+const connectionString = "mongodb+srv://muckitymuck:hbwEBJS2pSG090SZ@cluster0.ny2v6.mongodb.net/?retryWrites=true&w=majority"
 //app.use(bodyParser.urlencoded({ extended: true}))
 //replace the above with this line
 app.use(express.urlencoded())
@@ -27,6 +27,8 @@ app.post('/quotes', (req, res) => {
     console.log(req.body)
 })
 
-MongoClient.connect('mongodb-connection-string', (err, client) => {
+MongoClient.connect(connectionString, (err, client) => {
+    if (err) return console.error(err)
+    console.log('Connected to Database')    
+})
     
-    })

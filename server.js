@@ -4,6 +4,8 @@ const express = require('express');
 //const bodyParser = require('body-parser') //Deprecated in Express.js
 const app = express();
 
+const MongoClient = require('mongodb').MongoClient
+
 //app.use(bodyParser.urlencoded({ extended: true}))
 //replace the above with this line
 app.use(express.urlencoded())
@@ -24,3 +26,7 @@ app.get('/', (req, res) => {
 app.post('/quotes', (req, res) => {
     console.log(req.body)
 })
+
+MongoClient.connect('mongodb-connection-string', (err, client) => {
+    
+    })

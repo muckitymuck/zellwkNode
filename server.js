@@ -36,13 +36,18 @@ MongoClient.connect(connectionString, { useUnifiedTopology: true })
     .then(client => {
         console.log('Connected to Database')
         const db = client.db('star-wars-quotes')
+        const quotesCollection = db.collection('quotes')
+        app.use(express.urlencoded())
         app.get('/', (req, res) => {
             res.sendFile(__dirname + '/index.html')
         })
         app.post('/quotes', (req, res) => {
-            console.log(req.body)
-        })
-        app.use(express.urlencoded())
+            quotesCollection.insertOne(req.body)
+                .then(result => {
+                  res.redirect('/')  
+                })
+                .catch(error => console.error(error))           
+        })    
 
         app.listen(3000, function() {
             console.log('listening on 3000')

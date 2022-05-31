@@ -7,6 +7,8 @@ const app = express();
 
 const MongoClient = require('mongodb').MongoClient
 const connectionString = "mongodb+srv://muckitymuck:hbwEBJS2pSG090SZ@cluster0.ny2v6.mongodb.net/?retryWrites=true&w=majority"
+const req = require("express/lib/request")
+const { append } = require("express/lib/response")
 //app.use(bodyParser.urlencoded({ extended: true}))
 //replace the above with this line
 // app.use(express.urlencoded())
@@ -64,7 +66,27 @@ MongoClient.connect(connectionString, { useUnifiedTopology: true })
                 })
                 .catch(error => console.error(error))           
         })    
-
+        app.use(express.static('public'))
+        app.put('/quotes', (req, res) => {
+            quotesCollection.findOneAndUpdate(
+                { name: 'Yoda' },
+                {
+                    $set: {
+                        name: req.body.name,
+                        quote: req.body.quote
+            
+                    }
+                },
+                {
+                    upsert: true
+                }
+            )
+                .then(result => {
+                    console.log(result)
+            
+                })
+                .catch(error => console.error(error))
+            })
 
         app.listen(3000, function() {
             console.log('listening on 3000')

@@ -1,6 +1,7 @@
 console.log('May Node be with you')
 
 const express = require('express');
+const res = require('express/lib/response');
 //const bodyParser = require('body-parser') //Deprecated in Express.js
 const app = express();
 
@@ -37,10 +38,25 @@ MongoClient.connect(connectionString, { useUnifiedTopology: true })
         console.log('Connected to Database')
         const db = client.db('star-wars-quotes')
         const quotesCollection = db.collection('quotes')
+        //Adds Dynamic HTML, ***Always place this before app.use, app.get, or app.post
+        app.set('view engine', 'ejs')
+
         app.use(express.urlencoded())
+        //This is the READ part of CRUD
         app.get('/', (req, res) => {
-            res.sendFile(__dirname + '/index.html')
+            //res.sendFile(__dirname + '/index.html')
+            //const cursor = db.collection('quotes').find().toArray()
+            //console.log(cursor)
+            db.collection('quotes').find().toArray()
+                .then(results => {
+                    res.render('index.ejs', { quotes: results })
+                })
+                .catch(error => console.error(error))
+            
+
         })
+
+        //This is the CREATE part of CRUD
         app.post('/quotes', (req, res) => {
             quotesCollection.insertOne(req.body)
                 .then(result => {
@@ -48,6 +64,7 @@ MongoClient.connect(connectionString, { useUnifiedTopology: true })
                 })
                 .catch(error => console.error(error))           
         })    
+
 
         app.listen(3000, function() {
             console.log('listening on 3000')

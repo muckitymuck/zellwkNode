@@ -2,7 +2,7 @@ console.log('May Node be with you')
 
 const express = require('express')
 const res = require('express/lib/response')
-//const bodyParser = require('body-parser') //Deprecated in Express.js
+const bodyParser = require('body-parser') //Deprecated in Express.js
 const app = express();
 
 const MongoClient = require('mongodb').MongoClient
@@ -43,7 +43,7 @@ MongoClient.connect(connectionString, { useUnifiedTopology: true })
         //Adds Dynamic HTML, ***Always place this before app.use, app.get, or app.post
         app.set('view engine', 'ejs')
         app.use(express.static('public'))
-
+        app.use(bodyParser.json())
         app.use(express.urlencoded())
         //This is the READ part of CRUD
         app.get('/', (req, res) => {
@@ -85,6 +85,19 @@ MongoClient.connect(connectionString, { useUnifiedTopology: true })
                 .then(result =>  res.json('Success'))
                 .catch(error => console.error(error))
             })
+        app.delete('/quotes', (req, res) => {
+            quotesCollection.deleteOne(
+                { name: req.body.name },
+
+            )
+            .then(result => {
+                if(result.deletedCount === 0){
+                    return res.json('No Quote to delete')
+                } 
+                res.json("Deleted Darth Vadar's quote") 
+            })
+            .catch(error => console.error(error))
+        })
 
         app.listen(3000, function() {
             console.log('listening on 3000')

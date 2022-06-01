@@ -1,7 +1,7 @@
 console.log('May Node be with you')
 
-const express = require('express');
-const res = require('express/lib/response');
+const express = require('express')
+const res = require('express/lib/response')
 //const bodyParser = require('body-parser') //Deprecated in Express.js
 const app = express();
 
@@ -42,6 +42,7 @@ MongoClient.connect(connectionString, { useUnifiedTopology: true })
         const quotesCollection = db.collection('quotes')
         //Adds Dynamic HTML, ***Always place this before app.use, app.get, or app.post
         app.set('view engine', 'ejs')
+        app.use(express.static('public'))
 
         app.use(express.urlencoded())
         //This is the READ part of CRUD
@@ -50,8 +51,8 @@ MongoClient.connect(connectionString, { useUnifiedTopology: true })
             //const cursor = db.collection('quotes').find().toArray()
             //console.log(cursor)
             db.collection('quotes').find().toArray()
-                .then(results => {
-                    res.render('index.ejs', { quotes: results })
+                .then(quotes => {
+                    res.render('index.ejs', { quotes: quotes })
                 })
                 .catch(error => console.error(error))
             
@@ -66,10 +67,10 @@ MongoClient.connect(connectionString, { useUnifiedTopology: true })
                 })
                 .catch(error => console.error(error))           
         })    
-        app.use(express.static('public'))
+        
         app.put('/quotes', (req, res) => {
             quotesCollection.findOneAndUpdate(
-                { name: 'Yoda' },
+                { name: 'yoda' },
                 {
                     $set: {
                         name: req.body.name,
@@ -81,10 +82,7 @@ MongoClient.connect(connectionString, { useUnifiedTopology: true })
                     upsert: true
                 }
             )
-                .then(result => {
-                    console.log(result)
-            
-                })
+                .then(result =>  res.json('Success'))
                 .catch(error => console.error(error))
             })
 

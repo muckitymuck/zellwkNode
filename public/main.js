@@ -1,6 +1,8 @@
-//const req = require("express/lib/request")
+// app.use(express.static('public'))
+// app.use(bodyParser.json())
+// const req = require("express/lib/request")
 
-//const { append } = require("express/lib/response")
+// const { append } = require("express/lib/response")
 
 const update = document.querySelector('#update-button')
 
@@ -13,25 +15,31 @@ update.addEventListener('click', _ => {
             quote: 'I find your lack of faith disturbing.'
         })
     })
+    .then(res => {
+        if (res.ok) return res.json()
+    })
+    .then(response => {
+        window.location.reload(true)
+    })
 })
 
 // app.put('/quotes', (req, res) => {
-// quotesCollection.findOneAndUpdate(
-//     { name: 'Yoda' },
-//     {
-//         $set: {
-//             name: req.body.name,
-//             quote: req.body.quote
+//     quotesCollection.findOneAndUpdate(
+//         { name: 'Yoda' },
+//         {
+//             $set: {
+//                 name: req.body.name,
+//                 quote: req.body.quote
 
+//             }
+//         },
+//         {
+//             upsert: true
 //         }
-//     },
-//     {
-//         upsert: true
-//     }
-// )
-//     .then(result => {
-//         console.log(result)
+//     )
+//         .then(result => {
+//             console.log(result)
 
-//     })
-//     .catch(error => console.error(error))
+//         })
+//         .catch(error => console.error(error))
 // })
